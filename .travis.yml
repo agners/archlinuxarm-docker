@@ -1,0 +1,18 @@
+dist: xenial
+language: generic
+sudo: required
+go:
+  - stable
+services:
+  - docker
+install:
+  - go get github.com/estesp/manifest-tool
+  - 'echo ''{ "experimental": true }'' | sudo tee /etc/docker/daemon.json'
+  - sudo systemctl restart docker
+  - sudo apt-get --yes --no-install-recommends install qemu-user-static
+  - sudo su -c 'echo -1 > /proc/sys/fs/binfmt_misc/qemu-arm'
+  - echo ':qemu-arm:M:0:\x7f\x45\x4c\x46\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-arm-static:CF' | sudo tee -a /proc/sys/fs/binfmt_misc/register
+script:
+  - ./build
+after_success:
+  - '[ "$TRAVIS_PULL_REQUEST" == "false" ] && docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && ./push'

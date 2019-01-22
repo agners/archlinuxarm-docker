@@ -1,0 +1,11 @@
+#!/bin/bash -ex
+
+DOCKER_ARCH=arm32v7
+DOCKER_ORG=agners
+DOCKER_IMAGE=archlinuxarm-${DOCKER_ARCH}
+
+TAG_DATE=$(date +'%Y%m%d')
+
+docker build -t $DOCKER_ORG/$DOCKER_IMAGE \
+	-t $DOCKER_ORG/$DOCKER_IMAGE:$TAG_DATE .
+
