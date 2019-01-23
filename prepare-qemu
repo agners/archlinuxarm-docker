@@ -1,0 +1,18 @@
+#!/bin/bash -ex
+
+if [[ $EUID -ne 0 ]]; then
+	echo "This script must be run as root" 
+	exit 1
+fi
+
+# Delete currently existing configurations
+if [ -f /proc/sys/fs/binfmt_misc/qemu-arm ]; then
+	echo -1 > /proc/sys/fs/binfmt_misc/qemu-arm
+fi
+if [ -f /proc/sys/fs/binfmt_misc/qemu-aarch64 ]; then
+	echo -1 > /proc/sys/fs/binfmt_misc/qemu-aarch64
+fi
+
+echo ':qemu-arm:M:0:\x7f\x45\x4c\x46\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-arm-static:CF' > /proc/sys/fs/binfmt_misc/register
+
+echo ':qemu-aarch64:M:0:\x7f\x45\x4c\x46\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\xb7\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-aarch64-static:CF' > /proc/sys/fs/binfmt_misc/register

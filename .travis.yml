@@ -13,10 +13,8 @@ install:
   - 'echo ''{ "experimental": true }'' | sudo tee /etc/docker/daemon.json'
   - sudo systemctl restart docker
   - sudo apt-get --yes --no-install-recommends install qemu-user-static
-  - sudo su -c 'echo -1 > /proc/sys/fs/binfmt_misc/qemu-arm'
-  - sudo su -c 'echo -1 > /proc/sys/fs/binfmt_misc/qemu-aarch64'
-  - echo ':qemu-arm:M:0:\x7f\x45\x4c\x46\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-arm-static:CF' | sudo tee -a /proc/sys/fs/binfmt_misc/register
-  - echo ':qemu-aarch64:M:0:\x7f\x45\x4c\x46\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\xb7\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-aarch64-static:CF' | sudo tee -a /proc/sys/fs/binfmt_misc/register
+before_script:
+  - ./prepare-qemu
 script:
   - ./build
 after_success:
