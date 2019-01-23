@@ -1,0 +1,12 @@
+image: agners/archlinuxarm:latest
+manifests:
+  - image: agners/archlinuxarm-arm32v7:latest
+    platform:
+      architecture: arm
+      variant: arm32v7
+      os: linux
+  - image: agners/archlinuxarm-arm64v8:latest
+    platform:
+      architecture: arm
+      variant: arm64v8
+      os: linux
