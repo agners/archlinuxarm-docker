@@ -23,6 +23,8 @@ jobs:
   include:
     - stage: deploy
       name: "Create Manifest"
-      install: go get github.com/estesp/manifest-tool
+      install:
+        - 'echo ''{ "experimental": true }'' | sudo tee /etc/docker/daemon.json'
+        - sudo systemctl restart docker
       before_script: docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
       script: ./create-manifest
