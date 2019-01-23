@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-DOCKER_ARCH=arm32v7
+DOCKER_ARCH=${BUILD_ARCH:-arm32v7}
 DOCKER_ORG=agners
 DOCKER_IMAGE=archlinuxarm-${DOCKER_ARCH}
 
