@@ -6,9 +6,6 @@ RUN mkdir -p /archlinux/rootfs
 
 COPY pacstrap-docker /archlinux/
 
-RUN pacman-key --init
-RUN pacman-key --populate archlinuxarm
-
 RUN ./pacstrap-docker /archlinux/rootfs \
 	bash sed gzip pacman
 
