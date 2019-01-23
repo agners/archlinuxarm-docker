@@ -1,0 +1,3 @@
+#!/bin/bash -ex
+
+"${GOPATH}/bin/manifest-tool" push from-spec manifests/manifest.yml

@@ -19,3 +19,9 @@ script:
   - ./build
 after_success:
   - '[ "$TRAVIS_PULL_REQUEST" == "false" ] && docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && ./push'
+
+jobs:
+  include:
+    - stage: deploy
+      name: "Create Manifest"
+      script: ./create-manifest
