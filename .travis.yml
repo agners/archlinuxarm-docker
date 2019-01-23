@@ -23,6 +23,6 @@ jobs:
   include:
     - stage: deploy
       name: "Create Manifest"
-      install: 'echo ''{ "experimental": "enabled" }'' > $HOME/.docker/config.json'
+      install: 'mkdir $HOME/.docker/ && echo ''{ "experimental": "enabled" }'' > $HOME/.docker/config.json'
       before_script: docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
       script: ./create-manifest
