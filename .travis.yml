@@ -14,7 +14,7 @@ install:
   - sudo systemctl restart docker
   - sudo apt-get --yes --no-install-recommends install qemu-user-static
 before_script:
-  - ./prepare-qemu
+  - sudo ./prepare-qemu
 script:
   - ./build
 after_success:
