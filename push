@@ -6,6 +6,7 @@ DOCKER_IMAGE=archlinuxarm-${DOCKER_ARCH}
 
 TAG_DATE=$(date +'%Y%m%d')
 
-docker push $DOCKER_ORG/$DOCKER_IMAGE $DOCKER_ORG/$DOCKER_IMAGE:$TAG_DATE
+docker push $DOCKER_ORG/$DOCKER_IMAGE:$TAG_DATE
+docker push $DOCKER_ORG/$DOCKER_IMAGE
 
 
