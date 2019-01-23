@@ -9,7 +9,6 @@ env:
   - BUILD_ARCH=arm32v7
   - BUILD_ARCH=arm64v8
 install:
-  - go get github.com/estesp/manifest-tool
   - 'echo ''{ "experimental": true }'' | sudo tee /etc/docker/daemon.json'
   - sudo systemctl restart docker
   - sudo apt-get --yes --no-install-recommends install qemu-user-static
@@ -24,4 +23,6 @@ jobs:
   include:
     - stage: deploy
       name: "Create Manifest"
+      install: go get github.com/estesp/manifest-tool
+      before_script: docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
       script: ./create-manifest
