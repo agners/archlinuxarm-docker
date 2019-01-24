@@ -4,6 +4,12 @@
 newroot=$1; shift
 pacman_args=("${@:-base}")
 
+if [[ $EUID -ne 0 ]]; then
+       die "This script must be run as root"
+fi
+
+umask
+
 [[ -d $newroot ]] || die "%s is not a directory" "$newroot"
 
 echo 'Creating install root at %s' "$newroot"
