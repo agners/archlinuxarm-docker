@@ -9,6 +9,8 @@ env:
   - BUILD_ARCH=arm32v7
   - BUILD_ARCH=arm64v8
 before_install:
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
   - sudo apt update -y && sudo apt install --only-upgrade docker-ce -y
   - docker info
 install:
