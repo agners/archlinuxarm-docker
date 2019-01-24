@@ -1,11 +1,15 @@
 #!/bin/bash
 
+out() { printf "$1 $2\n" "${@:3}"; }
+error() { out "==> ERROR:" "$@"; } >&2
+die() { error "$@"; exit 1; }
+
 (( $# )) || die "No root directory specified"
 newroot=$1; shift
 pacman_args=("${@:-base}")
 
 if [[ $EUID -ne 0 ]]; then
-       die "This script must be run as root"
+	die "This script must be run as root"
 fi
 
 umask
@@ -19,5 +23,5 @@ mkdir -m 0555 -p "$newroot"/{sys,proc}
 
 echo 'Installing packages to %s' "$newroot"
 if ! pacman -r "$newroot" -Sy --noconfirm "${pacman_args[@]}"; then
-  die 'Failed to install packages to new root'
+	die 'Failed to install packages to new root'
 fi
