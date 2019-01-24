@@ -11,13 +11,16 @@ RUN ./pacstrap-docker /archlinux/rootfs \
 
 # Remove current pacman database, likely outdated very soon
 RUN rm rootfs/var/lib/pacman/sync/*
+RUN ls -la /archlinux/rootfs/
 
 FROM scratch
 COPY --from=0 /archlinux/rootfs/ /
+RUN ls -la /
 COPY rootfs/ /
 
 ENV LANG=en_US.UTF-8
 
+RUN ls -la /
 RUN locale-gen
 RUN pacman-key --init
 RUN pacman-key --populate archlinuxarm
