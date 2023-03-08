@@ -1,4 +1,4 @@
-# Basic Arch Linux ARM Docker images [![Build Status](https://travis-ci.org/agners/archlinuxarm-docker.svg?branch=master)](https://travis-ci.org/agners/archlinuxarm-docker)
+# Basic Arch Linux ARM Docker images [![Build and Deploy](https://github.com/agners/archlinuxarm-docker/actions/workflows/build-deploy.yml/badge.svg)](https://github.com/agners/archlinuxarm-docker/actions/workflows/build-deploy.yml)
 
 Docker images for Arch Linux ARM on AArch32 (ARMv7-A) and AArch64 (ARMv8-A). Built using native pacman and Docker multi-stage builds. Builds weekly by Travis CI on publicly visible infrastructure using Qemu emulation.
 
@@ -16,7 +16,7 @@ Instead of using the multi-arch container above, you can also get the architectu
 
 |  Tag   |   Update   |  Type   |                                 Description                                        |
 |:------:|:----------:|:-------:|:-----------------------------------------------------------------------------------|
-| latest | **weekly** | minimal | minimal Arch Linux ARM with pacman support                                        |
+| latest | **weekly** | minimal | minimal Arch Linux ARM with pacman support                                         |
 
 ### Layer structure
 
@@ -43,16 +43,15 @@ docker run -e TZ=Europe/Berlin agners/archlinuxarm
 ### Prerequisites
 
 - Docker with experimental mode on (required for squash)
-- sudo or root is neccessary to setup binfmt for Qemu user mode emulation
 
 ### Building
 
-- Prepare binfmt use with Qemu user mode using `sudo ./prepare-qemu`
-- Run `BUILD_ARCH=<arch> ./build` to build
+- Prepare binfmt use with Qemu user mode using `docker run --rm --privileged multiarch/qemu-user-static --reset -p yes`
+- Run `BUILD_ARCH=<arch> DOCKER_ORG=<your_docker_org> ./build` to build
   - Use `BUILD_ARCH=arm32v7` for ARMv7 Aarch32
   - Use `BUILD_ARCH=arm64v8` for ARMv8 Aarch64
 
-If you want to push the images, run `./push`. *But be aware you have no push access to the repos! Edit the scripts to push to custom Docker Hub locations!*
+If you want to push the images, run `DOCKER_ORG=<your_docker_org> ./push`.
 
 ### Building from scratch
 

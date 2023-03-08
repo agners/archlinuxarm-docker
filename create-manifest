@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-DOCKER_ORG=agners
+DOCKER_ORG=${DOCKER_ORG:-agners}
 DOCKER_IMAGE=archlinuxarm
 
 TAGS="latest $(date +'%Y%m%d')"
@@ -8,8 +8,8 @@ TAGS="latest $(date +'%Y%m%d')"
 for TAG in $TAGS
 do
 	docker manifest create --amend $DOCKER_ORG/$DOCKER_IMAGE:$TAG \
-				$DOCKER_ORG/$DOCKER_IMAGE-arm32v7:$TAG \
-				$DOCKER_ORG/$DOCKER_IMAGE-arm64v8:$TAG
+			$DOCKER_ORG/$DOCKER_IMAGE-arm32v7:$TAG \
+			$DOCKER_ORG/$DOCKER_IMAGE-arm64v8:$TAG
 
 	docker manifest annotate $DOCKER_ORG/$DOCKER_IMAGE:$TAG \
 			$DOCKER_ORG/$DOCKER_IMAGE-arm32v7:$TAG \

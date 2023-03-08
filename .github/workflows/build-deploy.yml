@@ -1,0 +1,66 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: '0 0 * * 0' # Run weekly on Sunday at midnight
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: 
+          - arm32v7
+          - arm64v8
+    steps:
+      - uses: actions/checkout@v2
+      - name: Enable Docker experimental mode for image squashing
+        if: github.actor != 'nektos/act'
+        run: |
+          echo '{ "experimental": true }' | sudo tee /etc/docker/daemon.json
+          sudo systemctl restart docker
+      - name: Setup dependencies
+        run: |
+          sudo apt-get update && \
+            sudo apt-get --yes --no-install-recommends install qemu-user-static
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          chmod -R g-w ./
+      - name: Build images
+        run: ./build
+        env:
+          BUILD_ARCH: ${{ matrix.arch }}
+          DOCKER_ORG: ${{ secrets.DOCKER_USERNAME }}
+      - name: Deploy images
+        if: github.event_name != 'pull_request'
+        run: docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && ./push
+        env:
+          BUILD_ARCH: ${{ matrix.arch }}
+          DOCKER_ORG: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  manifests:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    needs:
+      - build
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup dependencies
+        run: docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+        env:
+          DOCKER_ORG: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Create Manifest
+        run: ./create-manifest
+        env:
+          DOCKER_ORG: ${{ secrets.DOCKER_USERNAME }}
